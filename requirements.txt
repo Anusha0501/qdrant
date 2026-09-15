@@ -1,0 +1,9 @@
+qdrant-client[fastembed]==1.11.3
+fastembed==0.3.6
+datasets==3.0.1
+python-dotenv==1.0.1
+tqdm==4.66.5
+cohere==5.11.1
+numpy==1.26.4
+pandas==2.2.3
+pytest==8.3.3

@@ -1,0 +1,71 @@
+<svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <rect width="1000" height="520" fill="#F8FAFC"/>
+  <text x="500" y="36" text-anchor="middle" font-size="24" font-weight="700" fill="#0F172A">
+    BM25 Exact Matching vs. SPLADE Learned Term Expansion
+  </text>
+  <text x="500" y="62" text-anchor="middle" font-size="14" fill="#475569">
+    Query: "automated decision-making obligations"
+  </text>
+
+  <!-- BM25 panel -->
+  <rect x="40" y="90" width="440" height="400" rx="16" fill="#FEE2E2" stroke="#EF4444" stroke-width="2"/>
+  <text x="260" y="126" text-anchor="middle" font-size="18" font-weight="700" fill="#991B1B">BM25 (lexical)</text>
+  <text x="260" y="148" text-anchor="middle" font-size="12" fill="#7F1D1D">Matches only literal tokens present in the query</text>
+
+  <g font-size="13" fill="#7F1D1D">
+    <rect x="70" y="170" width="380" height="34" rx="6" fill="#FCA5A5"/>
+    <text x="90" y="192">"automated" — token match ✓</text>
+
+    <rect x="70" y="212" width="380" height="34" rx="6" fill="#FCA5A5"/>
+    <text x="90" y="234">"decision-making" — token match ✓</text>
+
+    <rect x="70" y="254" width="380" height="34" rx="6" fill="#FEE2E2" stroke="#EF4444" stroke-dasharray="4 3"/>
+    <text x="90" y="276">"obligations" — partial / stemmed only</text>
+
+    <rect x="70" y="296" width="380" height="34" rx="6" fill="#FEE2E2" stroke="#EF4444" stroke-dasharray="4 3"/>
+    <text x="90" y="318">"Article 22" — missed (no lexical overlap)</text>
+
+    <rect x="70" y="338" width="380" height="34" rx="6" fill="#FEE2E2" stroke="#EF4444" stroke-dasharray="4 3"/>
+    <text x="90" y="360">"solely on automated processing" — missed</text>
+
+    <rect x="70" y="380" width="380" height="34" rx="6" fill="#FEE2E2" stroke="#EF4444" stroke-dasharray="4 3"/>
+    <text x="90" y="402">"profiling" (related concept) — missed</text>
+  </g>
+  <text x="260" y="450" text-anchor="middle" font-size="13" font-weight="600" fill="#991B1B">
+    Recall limited to exact vocabulary overlap
+  </text>
+  <text x="260" y="470" text-anchor="middle" font-size="12" fill="#7F1D1D">
+    Misses synonyms, paraphrase, and cross-referenced clauses
+  </text>
+
+  <!-- SPLADE panel -->
+  <rect x="520" y="90" width="440" height="400" rx="16" fill="#DCFCE7" stroke="#22C55E" stroke-width="2"/>
+  <text x="740" y="126" text-anchor="middle" font-size="18" font-weight="700" fill="#166534">SPLADE (learned sparse)</text>
+  <text x="740" y="148" text-anchor="middle" font-size="12" fill="#14532D">Expands to contextually relevant legal terms</text>
+
+  <g font-size="13" fill="#14532D">
+    <rect x="550" y="170" width="380" height="34" rx="6" fill="#86EFAC"/>
+    <text x="570" y="192">"automated" — direct + high activation</text>
+
+    <rect x="550" y="212" width="380" height="34" rx="6" fill="#86EFAC"/>
+    <text x="570" y="234">"decision-making" — direct + high activation</text>
+
+    <rect x="550" y="254" width="380" height="34" rx="6" fill="#86EFAC"/>
+    <text x="570" y="276">"obligations" — direct match</text>
+
+    <rect x="550" y="296" width="380" height="34" rx="6" fill="#BBF7D0"/>
+    <text x="570" y="318">"Article 22" — learned association ✓</text>
+
+    <rect x="550" y="338" width="380" height="34" rx="6" fill="#BBF7D0"/>
+    <text x="570" y="360">"solely automated processing" — expanded ✓</text>
+
+    <rect x="550" y="380" width="380" height="34" rx="6" fill="#BBF7D0"/>
+    <text x="570" y="402">"profiling" — expanded via context ✓</text>
+  </g>
+  <text x="740" y="450" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">
+    Learns which terms co-occur with meaning
+  </text>
+  <text x="740" y="470" text-anchor="middle" font-size="12" fill="#14532D">
+    Retains exact-match grounding + semantic term expansion
+  </text>
+</svg>
