@@ -19,11 +19,13 @@ from src.config import (
     SPARSE_VECTOR_NAME,
     load_settings,
 )
+from src.embeddings import resolve_dense_vector_size
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger(__name__)
 
-# BAAI/bge-small-en-v1.5 dimension; update if DENSE_MODEL_NAME changes.
+# Default dense size for BAAI/bge-small-en-v1.5. create_collection resolves
+# the live size from the configured model (Cohere multilingual is 1024).
 DENSE_VECTOR_SIZE = 384
 
 
@@ -37,6 +39,7 @@ def create_collection(
     collection_name: str,
     recreate: bool = False,
     include_bm25: bool = True,
+    dense_size: int | None = None,
 ) -> None:
     exists = client.collection_exists(collection_name)
     if exists and not recreate:
@@ -46,11 +49,13 @@ def create_collection(
         logger.warning("Recreating collection %s (all existing data will be dropped).", collection_name)
         client.delete_collection(collection_name)
 
+    vector_size = dense_size if dense_size is not None else resolve_dense_vector_size()
+
     client.create_collection(
         collection_name=collection_name,
         vectors_config={
             DENSE_VECTOR_NAME: qm.VectorParams(
-                size=DENSE_VECTOR_SIZE,
+                size=vector_size,
                 distance=qm.Distance.COSINE,
             ),
         },
@@ -80,7 +85,11 @@ def create_collection(
         field_schema=qm.PayloadSchemaType.KEYWORD,
     )
 
-    logger.info("Created collection %s with dense+sparse named vectors.", collection_name)
+    logger.info(
+        "Created collection %s with dense size %d plus sparse named vectors.",
+        collection_name,
+        vector_size,
+    )
 
 
 def main() -> None:

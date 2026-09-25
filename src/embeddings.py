@@ -3,7 +3,9 @@ Embedding generation for the hybrid pipeline.
 
 - Dense vectors: FastEmbed (default, local ONNX inference) or Cohere API.
 - Sparse vectors: Qdrant FastEmbed's SPLADE++ model (learned sparse, context
-  aware — unlike raw BM25 term frequency).
+  aware — unlike raw BM25 term frequency). This FastEmbed release does not
+  ship BGE-M3 sparse weights; SPLADE is the learned-expansion model, and
+  `Qdrant/bm42-all-minilm-l6-v2-attentions` is the lighter alternative.
 
 Both embedders are wrapped behind a small interface so `ingest.py` and
 `search.py` don't need to know which provider is active.
@@ -23,6 +25,31 @@ from src.config import Settings, load_settings
 class SparseVector:
     indices: list[int]
     values: list[float]
+
+
+# Cohere embed-multilingual-v3.0. FastEmbed models report their own size.
+COHERE_DENSE_SIZE = 1024
+
+
+def resolve_dense_vector_size(settings: Settings | None = None) -> int:
+    """
+    Dimension written into the Qdrant dense named vector.
+
+    BAAI/bge-small-en-v1.5 is 384. Cohere embed-multilingual-v3.0 is 1024.
+    A hardcoded 384 would reject every Cohere vector at ingest time.
+    """
+    settings = settings or load_settings()
+    if settings.embedding_provider == "cohere":
+        return COHERE_DENSE_SIZE
+
+    for model in TextEmbedding.list_supported_models():
+        if model.get("model") == settings.dense_model_name:
+            return int(model["dim"])
+    known = ", ".join(sorted(m["model"] for m in TextEmbedding.list_supported_models())[:8])
+    raise ValueError(
+        f"DENSE_MODEL_NAME={settings.dense_model_name!r} is not a FastEmbed dense model. "
+        f"Examples: {known}. Or set EMBEDDING_PROVIDER=cohere."
+    )
 
 
 class DenseEmbedder:

@@ -8,8 +8,11 @@ __pycache__/
 *.egg-info/
 .pytest_cache/
 
-# Data / model artifacts
-data/
+# Data / model artifacts.
+# Ignore generated chunks, but keep the labeled eval set in git.
+# `data/` (trailing slash) would ignore the directory itself and make the
+# negation below impossible — ignore the contents instead.
+data/*
 *.jsonl
 !data/eval_queries.jsonl
 .cache/

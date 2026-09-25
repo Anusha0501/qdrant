@@ -34,6 +34,7 @@ class Settings:
     sparse_model_name: str
 
     hf_dataset_name: str
+    hf_dataset_config: str | None
     hf_dataset_revision: str
 
 
@@ -53,6 +54,8 @@ def load_settings() -> Settings:
     qdrant_url = os.getenv("QDRANT_URL", "http://localhost:6333")
     qdrant_api_key = os.getenv("QDRANT_API_KEY") or None
 
+    dataset_config = os.getenv("HF_DATASET_CONFIG", "eurlex").strip()
+
     return Settings(
         qdrant_url=qdrant_url,
         qdrant_api_key=qdrant_api_key,
@@ -61,7 +64,10 @@ def load_settings() -> Settings:
         cohere_api_key=cohere_api_key,
         dense_model_name=os.getenv("DENSE_MODEL_NAME", "BAAI/bge-small-en-v1.5"),
         sparse_model_name=os.getenv("SPARSE_MODEL_NAME", "prithivida/Splade_PP_en_v1"),
-        hf_dataset_name=os.getenv("HF_DATASET_NAME", "joelniklaus/eurlex"),
+        # joelniklaus/eurlex was removed from the Hub (404). LexGLUE's eurlex
+        # config is the maintained English EU-legislation corpus.
+        hf_dataset_name=os.getenv("HF_DATASET_NAME", "coastalcph/lex_glue"),
+        hf_dataset_config=dataset_config or None,
         hf_dataset_revision=os.getenv("HF_DATASET_REVISION", "main"),
     )
 

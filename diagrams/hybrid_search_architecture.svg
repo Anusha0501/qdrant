@@ -72,8 +72,6 @@
   <text x="760" y="356" text-anchor="middle" font-size="13" fill="#065F46" font-weight="700">Reciprocal Rank Fusion</text>
   <text x="760" y="374" text-anchor="middle" font-size="11" fill="#065F46">(query_points, fusion=RRF)</text>
 
-  <line x1="890" y1="360" x2="960" y2="360" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
-
   <!-- Results -->
   <rect x="700" y="440" width="260" height="90" rx="10" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.5"/>
   <text x="830" y="470" text-anchor="middle" font-size="14" font-weight="700" fill="#78350F">Ranked Results</text>

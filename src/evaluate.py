@@ -86,6 +86,15 @@ def main() -> None:
     parser.add_argument("--k", type=int, default=5)
     args = parser.parse_args()
 
+    if not args.queries.exists():
+        logger.error(
+            "Evaluation file %s does not exist. "
+            "Run `python -m src.data_prep` (or `--from-chunks data/chunks.jsonl`) "
+            "so gold chunk ids are written next to the indexed passages.",
+            args.queries,
+        )
+        raise SystemExit(1)
+
     queries = load_eval_queries(args.queries)
     if not queries:
         logger.warning("No evaluation queries found in %s.", args.queries)
